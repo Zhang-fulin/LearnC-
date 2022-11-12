@@ -3,6 +3,7 @@
 #include <string>
 #include <numeric>
 #include <algorithm>
+#include <functional>
 
 #include "./Singleton.h"
 //#include "./initializerlist.h"
@@ -45,7 +46,6 @@ void print(int (&a)[10])
 {
     for (auto &i : a)
     {
-        ++i;
         cout << i << " ";
     }
     endl();
@@ -58,6 +58,45 @@ struct C
     C(int x, double y) : m_x(x), m_y(y) {}
     void Fun() { cout << "test" << endl; }
 };
+
+void elimDups(std::vector<std::string> &words)
+{
+    std::sort(words.begin(), words.end());
+    auto end_unique = unique(words.begin(), words.end());
+    words.erase(end_unique, words.end());
+}
+// auto g = bind(f, a, b, _2, c, _1);
+// g(x, y) = f(a,b,y,c,x);
+bool chek_size(const string &a, vector<string>::size_type z)
+{
+    return a.size() > z;
+}
+ostream &printfsss(std::ostream &os, const string &s, char c)
+{
+    return os << s << c;
+}
+void bigges(std::vector<std::string> &words, vector<string>::size_type sz, ostream& os = cout, char c = ' ')
+{
+    print(words);
+    elimDups(words);
+    print(words);
+    stable_sort(words.begin(), words.end(), [](const string &a, const string &b) -> bool
+                { return a.size() < b.size(); });
+                
+    auto wc = find_if(words.begin(), words.end(), std::bind(chek_size, std::placeholders::_1, std::ref(sz)));
+    auto count = words.end() - wc;
+    for_each(wc, words.end(), std::bind(printfsss, ref(os), std::placeholders::_1, c));
+    std::cout << std::endl;
+}
+
+void fcn3()
+{
+    size_t v1 = 42;
+    auto f = [v1]() mutable -> int
+    { return ++v1; };
+    v1 = 0;
+    auto j = f();
+}
 
 int main()
 {
@@ -172,7 +211,7 @@ int main()
     print(vec);
 
     int a1[] = {0, 2, 2, 5, 4, 5, 7, 7, 8, 12};
-    int a22[sizeof(a1)/sizeof(*a1)];
+    int a22[sizeof(a1) / sizeof(*a1)];
     auto ret = copy(begin(a1), end(a1), begin(a22));
     print(a22);
 
@@ -182,5 +221,11 @@ int main()
     replace_copy(msg.cbegin(), msg.cend(), back_inserter(msgreplace), string("kunkun"), string("kun1"));
     print(msgreplace);
     cout << endl;
+
+    fcn3();
+
+    std::vector<std::string> words = {"the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle"};
+    bigges(words, 4);
+    endl();
     return 0;
 }
