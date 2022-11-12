@@ -75,14 +75,14 @@ ostream &printfsss(std::ostream &os, const string &s, char c)
 {
     return os << s << c;
 }
-void bigges(std::vector<std::string> &words, vector<string>::size_type sz, ostream& os = cout, char c = ' ')
+void bigges(std::vector<std::string> &words, vector<string>::size_type sz, ostream &os = cout, char c = ' ')
 {
     print(words);
     elimDups(words);
     print(words);
     stable_sort(words.begin(), words.end(), [](const string &a, const string &b) -> bool
                 { return a.size() < b.size(); });
-                
+
     auto wc = find_if(words.begin(), words.end(), std::bind(chek_size, std::placeholders::_1, std::ref(sz)));
     auto count = words.end() - wc;
     for_each(wc, words.end(), std::bind(printfsss, ref(os), std::placeholders::_1, c));
@@ -199,7 +199,8 @@ int main()
     print(msg);
     fill(msg.begin(), msg.end(), "kunkun");
     print(msg);
-    fill_n(msg.begin(), 3, "love");
+    fill_n(back_inserter(msg), 3, "love");
+    fill_n(inserter(msg, msg.begin() + 1), 2, "test");
     print(msg);
 
     vector<int> vec;
@@ -227,5 +228,24 @@ int main()
     std::vector<std::string> words = {"the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle"};
     bigges(words, 4);
     endl();
+
+    istream_iterator<int> int_it(std::cin);
+    istream_iterator<int> int_eof;
+    vector<int> istream_vec1;
+    while (int_it != int_eof)
+    {
+        istream_vec1.push_back(*int_it++);
+    }
+
+    // vector<int> istream_vec2(int_it, int_eof);
+
+    cout << accumulate(int_it, int_eof, 0) << endl;
+
+    ostream_iterator<int> out_iter(std::cout, " ");
+    for (auto e : istream_vec1)
+    {
+        *out_iter++ = e;
+    }
+
     return 0;
 }
