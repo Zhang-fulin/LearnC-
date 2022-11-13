@@ -6,6 +6,7 @@
 #include <functional>
 #include <map>
 #include <tuple>
+#include <memory>
 
 #include "./Singleton.h"
 //#include "./initializerlist.h"
@@ -13,6 +14,7 @@
 #include "./demo_local.h"
 #include "./Scene.h"
 #include "./account.h"
+#include "./strBlob.h"
 using namespace std;
 using namespace detail_range;
 
@@ -270,11 +272,30 @@ int main()
     const char *sendPack4 = &c;
     int nSendSize4 = 3;
 
-    std::tuple<const char*, int> tp1 = make_tuple(sendPack4, nSendSize4);
+    std::tuple<const char *, int> tp1 = make_tuple(sendPack4, nSendSize4);
     // std::tie(sendPack2, nSendSize2) = tp1;
     sendPack3 = std::get<0>(tp1);
     nSendSize3 = std::get<1>(tp1);
     std::tie(sendPack2, nSendSize2) = tp1;
     std::tie(std::ignore, nSendSize4) = tp1;
+
+    std::shared_ptr<std::string> pshared1 = std::make_shared<std::string>("999999999");
+    auto pshared2 = std::make_shared<std::vector<int>>(10, 2);
+
+    std::unique_ptr<std::string> p_unique_ptr1(new std::string("wodejia1"));
+    auto p_unique_ptr2 = p_unique_ptr1.release();
+    std::unique_ptr<std::string> p_unique_ptr3(p_unique_ptr2);
+    std::unique_ptr<std::string> p_unique_ptr5(p_unique_ptr2);
+    p_unique_ptr5 = nullptr;
+    std::unique_ptr<std::string> p_unique_ptr4(new std::string("wodejia2"));
+    p_unique_ptr3.reset();
+    // p_unique_ptr4.reset(p_unique_ptr2);
+    
+    auto pshared3 = std::make_shared<int>(200);
+    std::weak_ptr<int> pweak1(pshared3);
+    if(shared_ptr<int> p = pweak1.lock()) {
+
+    }
+
     return 0;
 }
