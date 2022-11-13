@@ -4,6 +4,8 @@
 #include <numeric>
 #include <algorithm>
 #include <functional>
+#include <map>
+#include <tuple>
 
 #include "./Singleton.h"
 //#include "./initializerlist.h"
@@ -229,23 +231,50 @@ int main()
     bigges(words, 4);
     endl();
 
-    istream_iterator<int> int_it(std::cin);
-    istream_iterator<int> int_eof;
-    vector<int> istream_vec1;
-    while (int_it != int_eof)
-    {
-        istream_vec1.push_back(*int_it++);
-    }
+    // istream_iterator<int> int_it(std::cin);
+    // istream_iterator<int> int_eof;
+    // vector<int> istream_vec1;
+    // while (int_it != int_eof)
+    // {
+    //     istream_vec1.push_back(*int_it++);
+    // }
 
     // vector<int> istream_vec2(int_it, int_eof);
 
-    cout << accumulate(int_it, int_eof, 0) << endl;
+    // cout << accumulate(int_it, int_eof, 0) << endl;
 
-    ostream_iterator<int> out_iter(std::cout, " ");
-    for (auto e : istream_vec1)
+    // ostream_iterator<int> out_iter(std::cout, " ");
+    // for (auto e : istream_vec1)
+    // {
+    //     *out_iter++ = e;
+    // }
+
+    std::map<string, size_t> word_count;
+    std::vector<std::string> words_word_count = {"the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle"};
+    for (const auto &word : words_word_count)
     {
-        *out_iter++ = e;
+        auto ret = word_count.insert({word, 1});
+        if (!ret.second)
+        {
+            ++ret.first->second;
+        }
     }
 
+    char c = 'c';
+    const char *sendPack1 = nullptr;
+    int nSendSize1 = 0;
+    const char *sendPack2 = &c;
+    int nSendSize2 = 1;
+    const char *sendPack3 = &c;
+    int nSendSize3 = 2;
+    const char *sendPack4 = &c;
+    int nSendSize4 = 3;
+
+    std::tuple<const char*, int> tp1 = make_tuple(sendPack4, nSendSize4);
+    // std::tie(sendPack2, nSendSize2) = tp1;
+    sendPack3 = std::get<0>(tp1);
+    nSendSize3 = std::get<1>(tp1);
+    std::tie(sendPack2, nSendSize2) = tp1;
+    std::tie(std::ignore, nSendSize4) = tp1;
     return 0;
 }
