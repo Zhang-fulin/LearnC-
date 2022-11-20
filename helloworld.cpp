@@ -281,21 +281,33 @@ int main()
 
     std::shared_ptr<std::string> pshared1 = std::make_shared<std::string>("999999999");
     auto pshared2 = std::make_shared<std::vector<int>>(10, 2);
+    std::shared_ptr<std::string> pshared3(new std::string("sssssss"));
 
     std::unique_ptr<std::string> p_unique_ptr1(new std::string("wodejia1"));
-    auto p_unique_ptr2 = p_unique_ptr1.release();
+    auto p_unique_ptr2 = p_unique_ptr1.release(); // 放弃对指针的控制权 返回指针 并置空
     std::unique_ptr<std::string> p_unique_ptr3(p_unique_ptr2);
     std::unique_ptr<std::string> p_unique_ptr5(p_unique_ptr2);
-    p_unique_ptr5 = nullptr;
+    p_unique_ptr3.release(); // 需要release 不然在函数退出时 由于p_unique_ptr5 释放了所指的对象， 会导致p_unique_ptr3 释放失败
+    p_unique_ptr5 = nullptr; // 释放所指的对象 并且置空
     std::unique_ptr<std::string> p_unique_ptr4(new std::string("wodejia2"));
-    p_unique_ptr3.reset();
-    // p_unique_ptr4.reset(p_unique_ptr2);
-    
-    auto pshared3 = std::make_shared<int>(200);
-    std::weak_ptr<int> pweak1(pshared3);
-    if(shared_ptr<int> p = pweak1.lock()) {
 
+    std::weak_ptr<std::string> pweak_ptr1(pshared3);
+    pweak_ptr1.reset(); //置空
+    std::weak_ptr<std::string> pweak_ptr2(pshared3);
+    std::cout << pweak_ptr2.use_count() << std::endl;
+    // pweak_ptr2.expired() 如果use_count 为0 返回 true , else -> flase
+    if (auto pweal_ptr2_shared_ptr = pweak_ptr2.lock())
+    {
     }
+    // p_unique_ptr3.reset();
+    // p_unique_ptr4.reset(p_unique_ptr2);
+
+    std::unique_ptr<int[]> pweak_ptr3(new int[10]);
+    pweak_ptr3[3] = 4; // 可以用下标来访问
+    pweak_ptr3.release();
+
+    std::shared_ptr<int> pshared4(new int[10], [](int *p) -> void
+                                  { delete[] p; }); // 不要用shar_ptr去管理 动态数组
 
     return 0;
 }
