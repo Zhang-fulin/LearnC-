@@ -15,6 +15,7 @@
 #include "./Scene.h"
 #include "./account.h"
 #include "./strBlob.h"
+#include "./HasPtr.h"
 using namespace std;
 using namespace detail_range;
 
@@ -101,6 +102,13 @@ void fcn3()
     v1 = 0;
     auto j = f();
 }
+
+struct NoCopy
+{
+    NoCopy() = default;
+    NoCopy(const NoCopy &) = delete;
+    NoCopy &operator=(const NoCopy &) = delete;
+};
 
 int main()
 {
@@ -309,5 +317,29 @@ int main()
     std::shared_ptr<int> pshared4(new int[10], [](int *p) -> void
                                   { delete[] p; }); // 不要用shar_ptr去管理 动态数组
 
+    std::allocator<std::string> allocator1;
+    auto const pallocator1 = allocator1.allocate(10);
+    auto qallocator1 = pallocator1;
+    allocator1.construct(qallocator1++);
+    allocator1.construct(qallocator1++, 10, 'c');
+    allocator1.construct(qallocator1++, "hi");
+    while (qallocator1 != pallocator1)
+    {
+        allocator1.destroy(--qallocator1);
+    }
+    allocator1.deallocate(pallocator1, 10);
+
+    // 13 需要析构函数的时候 一定需要拷贝构造函数 和 赋值构造函数
+    // 拷贝构造函数和赋值构造函数 一一对应
+
+    // =default
+    // =delete 析构函数不能是删除的 不能释放对象
+
+    // 拷贝并交换技术 完美应对自身赋值
+    HasPtr lhs1("sss", 4), rhs1("kkkkk", 6);
+    rhs1 = lhs1;
+
+    HasPtrRef lhs2("nnnnn", 5), rhs2("mmmmmmmmm", 7);
+    rhs2 = lhs2;
     return 0;
 }
