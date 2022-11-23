@@ -63,6 +63,7 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "__cxx_version": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "set": "cpp"
     }
 }

@@ -16,6 +16,8 @@
 #include "./account.h"
 #include "./strBlob.h"
 #include "./HasPtr.h"
+#include "./message.h"
+#include "./strvec.h"
 using namespace std;
 using namespace detail_range;
 
