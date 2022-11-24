@@ -88,3 +88,12 @@ private:
     std::string *first_free;
     std::string *cap;
 };
+
+class Foo
+{
+public:
+    Foo &operator=(const Foo &) & { return *this; };
+    Foo anothermem() const & { return *this; };
+    Foo sorted() &&;
+    Foo sorted() &; // 相同名字 相同参数的函数 要加都加 && 或者 & ，  要不加都不加
+};

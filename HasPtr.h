@@ -8,6 +8,10 @@ class HasPtr
 public:
     HasPtr(const std::string &s, int n) : ps(new std::string(s)), i(n) {}
     HasPtr(const HasPtr &p) : ps(new std::string(*p.ps)), i(p.i) {}
+    HasPtr(HasPtr &&p):ps(p.ps), i(p.i)
+    {
+        p.ps = nullptr;
+    }
     // HasPtr &operator=(const HasPtr &rhs)
     // {
     //     auto newp = new std::string(*rhs.ps);
