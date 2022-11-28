@@ -18,6 +18,7 @@
 #include "./HasPtr.h"
 #include "./message.h"
 #include "./strvec.h"
+#include "./unorder.h"
 using namespace std;
 using namespace detail_range;
 
@@ -344,4 +345,6 @@ int main()
     HasPtrRef lhs2("nnnnn", 5), rhs2("mmmmmmmmm", 7);
     rhs2 = lhs2;
     return 0;
+
+    // 模版的类型推导 和 auto 类型推导 T&&  auto&& 是未定义引用类型
 }
